@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour
 {
     [SerializeField]
-    private float _mouseSensitivity = 3.0f;
+    public float _mouseSensitivity = 3.0f;
 
     private float _rotationY;
     private float _rotationX;
@@ -24,6 +24,10 @@ public class CameraMove : MonoBehaviour
 
     [SerializeField]
     private Vector2 _rotationXMinMax = new Vector2(-40, 40);
+
+    public Transform checkpoint;
+    bool visible = true;
+    public GameObject player;
 
     void Start()
     {
@@ -50,5 +54,44 @@ public class CameraMove : MonoBehaviour
 
         // Substract forward vector of the GameObject to point its forward vector to the target
         transform.position = _target.position - transform.forward * _distanceFromTarget;
+
+
+        var ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit);
+
+        if (hit.transform.gameObject == _target.gameObject)
+        {
+            Debug.Log("Visible");
+            visible = true;
+        }
+        else
+        {
+            Debug.Log("Not visible");
+            visible = false;
+        }
+
+        if(visible==false)
+        {
+            StartCoroutine(ExampleCoroutine());
+            //player.transform.position = checkpoint.position;
+        }
+
+    }
+
+    IEnumerator ExampleCoroutine()
+    {
+        //Print the time of when the function is first called.
+        Debug.Log("Started Coroutine at timestamp : " + Time.time);
+
+        //yield on a new YieldInstruction that waits for 5 seconds.
+        yield return new WaitForSeconds(1.5f);
+        if (visible == false)
+        {
+            player.transform.position = checkpoint.position;
+        }
+
+        //After we have waited 5 seconds print the time again.
+        Debug.Log("Finished Coroutine at timestamp : " + Time.time);
     }
 }
