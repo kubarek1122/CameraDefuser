@@ -8,7 +8,7 @@ public class TurretController : MonoBehaviour
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Transform _rayPosition;
     [SerializeField] private Rigidbody bullet;
-    [SerializeField] private int _fireRate;
+    [SerializeField] private int _fireDelay;
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private int _bulletLifetime;
 
@@ -17,7 +17,7 @@ public class TurretController : MonoBehaviour
     private bool _targetInRange = false;
     private bool _visible;
     private bool _shot = false;
-    private bool _rotation = true;
+    private bool _alive = true;
     private Quaternion _initialRotation;
 
     void Start()
@@ -27,45 +27,56 @@ public class TurretController : MonoBehaviour
 
     void Update()
     {
-        var ray = new Ray(_rayPosition.position, _rayPosition.forward);
-        RaycastHit hit;
-        Physics.Raycast(ray, out hit);
+        if (_alive)
+        {
+            if (_targetInRange)
+            {
+                RaycastHit hit;
+                var ray = new Ray(_rayPosition.position, _target.position - _rayPosition.position);
+                Physics.Raycast(ray, out hit);
 
-        if (hit.transform.gameObject == _target.gameObject)
-        {
-            _visible = true;
-            _rotation = false;
-            Debug.Log("Player Visible");
-        }
-        else
-        {
-            _visible = false;
-            _rotation = true;
-            Debug.Log("Player Not Visible");
+                if (hit.transform.gameObject == _target.gameObject)
+                {
+                    _visible = true;
+                    Debug.Log("Player Visible");
+                }
+                else
+                {
+                    _visible = false;
+                    Debug.Log("Player Not Visible");
+                }
+            }
+
+            if (_targetInRange && _visible)
+            {
+                //transform.LookAt(_target);
+                Quaternion targetRotation = Quaternion.LookRotation(_target.position - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.3f);
+            }
+
+            if (!_visible || !_targetInRange)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, _initialRotation, 0.3f);
+            }
+
+            if (!_shot && _visible && _targetInRange)
+            {
+                _shot = true;
+                StartCoroutine("ShotDelay");
+            }
         }
 
-        if (_targetInRange && _visible)
+        if (Vector3.Dot(transform.up, Vector3.up) < 0.5f)
         {
-            transform.LookAt(_target);
-            _rayPosition.rotation = transform.rotation;
-        } 
-
-        if(_rotation)
-        {
-            _rayPosition.Rotate(0, _rotationSpeed * Time.deltaTime, 0);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _initialRotation, 0.3f);
+            _alive = false;
         }
 
-        if (!_shot && _visible && _targetInRange)
-        {
-            _shot = true;
-            StartCoroutine("ShotDelay");
-        }
+
     }
 
     IEnumerator ShotDelay()
     {
-        yield return new WaitForSeconds(_fireRate);
+        yield return new WaitForSeconds(_fireDelay);
 
         if (_visible)
         {
