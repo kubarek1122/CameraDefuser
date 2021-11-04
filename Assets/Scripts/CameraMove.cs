@@ -28,6 +28,7 @@ public class CameraMove : MonoBehaviour
     public Transform checkpoint;
     bool visible = true;
     public GameObject player;
+    public bool safeZone = false;
 
     void Start()
     {
@@ -71,7 +72,7 @@ public class CameraMove : MonoBehaviour
             visible = false;
         }
 
-        if(visible==false)
+        if(visible==false && safeZone==false)
         {
             StartCoroutine(ExampleCoroutine());
             //player.transform.position = checkpoint.position;
@@ -93,5 +94,21 @@ public class CameraMove : MonoBehaviour
 
         //After we have waited 5 seconds print the time again.
         Debug.Log("Finished Coroutine at timestamp : " + Time.time);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "SafeZone")
+        {
+            safeZone = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "SafeZone")
+        {
+            safeZone = false;
+        }
     }
 }

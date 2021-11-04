@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class TurretController : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class TurretController : MonoBehaviour
     [SerializeField] private int _bulletLifetime;
 
     [SerializeField] private int _rotationSpeed;
+
+    [SerializeField] private VisualEffect _explosion;
 
     private bool _targetInRange = false;
     private bool _visible;
@@ -104,6 +107,15 @@ public class TurretController : MonoBehaviour
         if (other.tag == "Player")
         {
             _targetInRange = false;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "MainCamera")
+        {
+            _explosion.Play();
+            _alive = false;
         }
     }
 }
