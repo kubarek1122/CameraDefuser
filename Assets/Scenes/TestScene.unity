@@ -12515,7 +12515,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364923960}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.97, y: 0.44, z: -7.61}
+  m_LocalPosition: {x: -0.97, y: 0.44, z: -2.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -12816,6 +12816,7 @@ MonoBehaviour:
   _distanceFromTarget: 10
   _smoothTime: 0.2
   _rotationXMinMax: {x: -40, y: 40}
+  _deathTimer: 3
   checkpoint: {fileID: 1364923961}
   player: {fileID: 3921228}
   safeZone: 0

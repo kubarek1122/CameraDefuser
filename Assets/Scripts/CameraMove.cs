@@ -25,10 +25,15 @@ public class CameraMove : MonoBehaviour
     [SerializeField]
     private Vector2 _rotationXMinMax = new Vector2(-40, 40);
 
+    [SerializeField] float _deathTimer = 3.0f;
+
     public Transform checkpoint;
     bool visible = true;
     public GameObject player;
     public bool safeZone = false;
+
+    Ray ray;
+    RaycastHit hit;
 
     void Start()
     {
@@ -57,8 +62,10 @@ public class CameraMove : MonoBehaviour
         transform.position = _target.position - transform.forward * _distanceFromTarget;
 
 
-        var ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
+        /*        var ray = new Ray(transform.position, transform.forward);
+                RaycastHit hit;*/
+
+        ray = new Ray(transform.position + new Vector3(0, 0, 0.1f), transform.forward);
         Physics.Raycast(ray, out hit);
 
         if (hit.transform.gameObject == _target.gameObject)
@@ -74,8 +81,11 @@ public class CameraMove : MonoBehaviour
 
         if(visible==false && safeZone==false)
         {
-            StartCoroutine(ExampleCoroutine());
+            StartCoroutine("ExampleCoroutine");
             //player.transform.position = checkpoint.position;
+        } else
+        {
+            StopCoroutine("ExampleCoroutine");
         }
 
     }
@@ -86,7 +96,7 @@ public class CameraMove : MonoBehaviour
         Debug.Log("Started Coroutine at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(_deathTimer);
         if (visible == false)
         {
             player.transform.position = checkpoint.position;
@@ -111,4 +121,5 @@ public class CameraMove : MonoBehaviour
             safeZone = false;
         }
     }
+
 }
