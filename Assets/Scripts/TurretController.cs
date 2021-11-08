@@ -9,6 +9,7 @@ public class TurretController : MonoBehaviour
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Transform _rayPosition;
     [SerializeField] private Rigidbody bullet;
+    [SerializeField] private Material _deactivated;
     [SerializeField] private int _fireDelay;
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private int _bulletLifetime;
@@ -114,6 +115,8 @@ public class TurretController : MonoBehaviour
     {
         if (collision.gameObject.tag == "MainCamera")
         {
+            MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+            meshRenderer.material = _deactivated;
             _explosion.Play();
             _alive = false;
         }
