@@ -25,18 +25,25 @@ public class CameraMove : MonoBehaviour
     [SerializeField]
     private Vector2 _rotationXMinMax = new Vector2(-40, 40);
 
-    [SerializeField] float _deathTimer = 3.0f;
+    [SerializeField] float _deathTimer = 1.5f;
 
     public Transform checkpoint;
     bool visible = true;
     public GameObject player;
     public bool safeZone = false;
 
+    public Collider camera_col;
+
+    public bool fadeing = false;
+
     Ray ray;
     RaycastHit hit;
 
+    public CanvasGroup FadeImage;
+
     void Start()
     {
+        //FadeOut();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -70,17 +77,33 @@ public class CameraMove : MonoBehaviour
 
         if (hit.transform.gameObject == _target.gameObject)
         {
+            FadeImage.alpha = 0;
+            if(!fadeing)
+            {
+                fadeing = true;
+
+                FadeOut();
+            }
+
             Debug.Log("Visible");
             visible = true;
         }
         else
         {
+            if(!fadeing)
+            {
+                fadeing = true;
+                FadeIn();
+            }
             Debug.Log("Not visible");
+            Debug.Log(fadeing);
             visible = false;
         }
 
         if(visible==false && safeZone==false)
         {
+
+
             StartCoroutine("ExampleCoroutine");
             //player.transform.position = checkpoint.position;
         } else
@@ -90,12 +113,13 @@ public class CameraMove : MonoBehaviour
 
     }
 
-    IEnumerator ExampleCoroutine()
+    public IEnumerator ExampleCoroutine()
     {
         //Print the time of when the function is first called.
         Debug.Log("Started Coroutine at timestamp : " + Time.time);
 
         //yield on a new YieldInstruction that waits for 5 seconds.
+
         yield return new WaitForSeconds(_deathTimer);
         if (visible == false)
         {
@@ -121,5 +145,39 @@ public class CameraMove : MonoBehaviour
             safeZone = false;
         }
     }
+
+    public void FadeIn()
+    {
+        StartCoroutine(FadeCanvasGroup(FadeImage, FadeImage.alpha, 1, 1.5f));
+    }
+
+    public void FadeOut()
+    {
+        StartCoroutine(FadeCanvasGroup(FadeImage, FadeImage.alpha, 0, 0.2f));
+    }
+
+    public IEnumerator FadeCanvasGroup(CanvasGroup cg, float start, float end, float lerpTime)
+    {
+        float timeStartedLerping = Time.time;
+        float timeSinceStarted = Time.time - timeStartedLerping;
+        float percentageComplete = timeSinceStarted / lerpTime;
+
+        while(true)
+        {
+            timeSinceStarted = Time.time - timeStartedLerping;
+            percentageComplete = timeSinceStarted / lerpTime;
+
+            float currentValue = Mathf.Lerp(start, end, percentageComplete);
+
+            cg.alpha = currentValue;
+
+            if (percentageComplete >= 1) break;
+
+            yield return new WaitForEndOfFrame();
+        }
+        fadeing = false;
+
+    }
+
 
 }
