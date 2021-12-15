@@ -68,10 +68,6 @@ public class CameraMove : MonoBehaviour
         // Substract forward vector of the GameObject to point its forward vector to the target
         transform.position = _target.position - transform.forward * _distanceFromTarget;
 
-
-        /*        var ray = new Ray(transform.position, transform.forward);
-                RaycastHit hit;*/
-
         ray = new Ray(transform.position + new Vector3(0, 0, 0.1f), transform.forward);
         Physics.Raycast(ray, out hit);
 
@@ -169,7 +165,8 @@ public class CameraMove : MonoBehaviour
 
             float currentValue = Mathf.Lerp(start, end, percentageComplete);
 
-            cg.alpha = currentValue;
+            if (!safeZone)
+                cg.alpha = currentValue;
 
             if (percentageComplete >= 1) break;
 

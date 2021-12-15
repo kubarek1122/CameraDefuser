@@ -6,21 +6,24 @@ using UnityEngine.VFX;
 public class Movement : MonoBehaviour
 {
     [SerializeField] private VisualEffect _explosion;
-    [SerializeField] private int _respawnTime;
+    [SerializeField] private float _respawnTime;
+    [SerializeField] private CameraMove _cameraMove;
+    [SerializeField] private float _jumpHeight = 5;
+    [SerializeField] private Rigidbody _rb;
 
     public float Speed;
 
     private bool isDead = false;
     private bool respawning = false;
+    private bool isGrounded = true;
     private Vector3 _initialPosition;
     private Quaternion _initialRotation;
-    private Rigidbody _rb;
+
 
     private void Start()
     {
         _initialPosition = transform.position;
         _initialRotation = transform.rotation;
-        _rb = GetComponent<Rigidbody>();
     }
 
 
@@ -35,7 +38,14 @@ public class Movement : MonoBehaviour
         {
             float hor = Input.GetAxis("Horizontal");
             float ver = Input.GetAxis("Vertical");
-            Vector3 playerMovement = new Vector3(hor, 0f, ver) * Speed * Time.deltaTime;
+            Vector3 playerMovement = new Vector3(hor, 0.0f, ver) * Speed * Time.deltaTime;
+
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            {
+                _rb.AddForce(Vector3.up * _jumpHeight);
+                isGrounded = false;
+            }
+
             transform.Translate(playerMovement, Space.Self);
         }
     }
@@ -52,6 +62,11 @@ public class Movement : MonoBehaviour
                 StartCoroutine("respawnTimer");
             }
         }
+
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+        }
     }
 
     IEnumerator respawnTimer()
@@ -67,6 +82,7 @@ public class Movement : MonoBehaviour
         transform.rotation = _initialRotation;
         _rb.velocity = new Vector3(0, 0, 0);
         _rb.angularVelocity = new Vector3(0, 0, 0);
+        _cameraMove.safeZone = false;
         respawning = false;
     }
 

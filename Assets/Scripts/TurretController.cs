@@ -10,7 +10,7 @@ public class TurretController : MonoBehaviour
     [SerializeField] private Transform _rayPosition;
     [SerializeField] private Rigidbody bullet;
     [SerializeField] private Material _deactivated;
-    [SerializeField] private int _fireDelay;
+    [SerializeField] private float _fireDelay;
     [SerializeField] private float _bulletSpeed;
     [SerializeField] private int _bulletLifetime;
 

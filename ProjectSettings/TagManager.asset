@@ -7,6 +7,7 @@ TagManager:
   - Projectile
   - Wall
   - SafeZone
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
+  - Ground
   - 
   - 
   - 
