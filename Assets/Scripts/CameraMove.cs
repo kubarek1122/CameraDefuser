@@ -71,42 +71,42 @@ public class CameraMove : MonoBehaviour
         ray = new Ray(transform.position + new Vector3(0, 0, 0.1f), transform.forward);
         Physics.Raycast(ray, out hit);
 
-        if (hit.transform.gameObject == _target.gameObject)
-        {
-            FadeImage.alpha = 0;
-            if(!fadeing)
-            {
-                fadeing = true;
+        /*  if (hit.transform.gameObject == _target.gameObject)
+          {
+              FadeImage.alpha = 0;
+              if(!fadeing)
+              {
+                  fadeing = true;
 
-                FadeOut();
-            }
+                  FadeOut();
+              }
 
-            Debug.Log("Visible");
-            visible = true;
-        }
-        else
-        {
-            if(!fadeing)
-            {
-                fadeing = true;
-                FadeIn();
-            }
-            Debug.Log("Not visible");
-            Debug.Log(fadeing);
-            visible = false;
-        }
+              Debug.Log("Visible");
+              visible = true;
+          }
+          else
+          {
+              if(!fadeing)
+              {
+                  fadeing = true;
+                  FadeIn();
+              }
+              Debug.Log("Not visible");
+              Debug.Log(fadeing);
+              visible = false;
+          }
 
-        if(visible==false && safeZone==false)
-        {
+          if(visible==false && safeZone==false)
+          {
 
 
-            StartCoroutine("ExampleCoroutine");
-            //player.transform.position = checkpoint.position;
-        } else
-        {
-            StopCoroutine("ExampleCoroutine");
-        }
-
+              StartCoroutine("ExampleCoroutine");
+              //player.transform.position = checkpoint.position;
+          } else
+          {
+              StopCoroutine("ExampleCoroutine");
+          }
+        */
     }
 
     public IEnumerator ExampleCoroutine()

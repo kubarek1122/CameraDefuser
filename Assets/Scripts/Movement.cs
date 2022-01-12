@@ -36,9 +36,9 @@ public class Movement : MonoBehaviour
     {
         if (!isDead)
         {
-            float hor = Input.GetAxis("Horizontal");
-            float ver = Input.GetAxis("Vertical");
-            Vector3 playerMovement = new Vector3(hor, 0.0f, ver) * Speed * Time.deltaTime;
+            float hor = Input.GetAxis("Vertical");
+            float ver = Input.GetAxis("Horizontal");
+            Vector3 playerMovement = new Vector3(hor, 0.0f, -1*ver) * Speed * Time.deltaTime;
 
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
