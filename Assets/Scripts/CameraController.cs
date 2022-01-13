@@ -4,16 +4,28 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private ThirdPersonMovement player;
+    [SerializeField] private Animation anim;
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Wall")
+        {
+            if (!player.isDead)
+            {
+                anim.Play();
+                player.Kill();
+            }
+        }
     }
 }

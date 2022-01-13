@@ -5,7 +5,7 @@ using UnityEngine.VFX;
 
 public class TurretController : MonoBehaviour
 {
-    [SerializeField] private Transform _target;
+    private Transform _target;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private Transform _rayPosition;
     [SerializeField] private Rigidbody bullet;
@@ -18,6 +18,8 @@ public class TurretController : MonoBehaviour
 
     [SerializeField] private VisualEffect _explosion;
 
+    private ThirdPersonMovement player;
+
     private bool _targetInRange = false;
     private bool _visible;
     private bool _shot = false;
@@ -27,6 +29,8 @@ public class TurretController : MonoBehaviour
     void Start()
     {
         _initialRotation = transform.rotation;
+        _target = GameObject.Find("Player").transform;
+        player = _target.gameObject.GetComponent<ThirdPersonMovement>();
     }
 
     void Update()
@@ -38,7 +42,6 @@ public class TurretController : MonoBehaviour
                 RaycastHit hit;
                 var ray = new Ray(_rayPosition.position, _target.position - _rayPosition.position);
                 Physics.Raycast(ray, out hit);
-
                 if (hit.transform.gameObject == _target.gameObject)
                 {
                     _visible = true;
@@ -82,7 +85,7 @@ public class TurretController : MonoBehaviour
     {
         yield return new WaitForSeconds(_fireDelay);
 
-        if (_visible)
+        if (_visible && !player.isDead)
         {
             Rigidbody clone;
             clone = Instantiate(bullet, _firePoint.position, _firePoint.rotation);

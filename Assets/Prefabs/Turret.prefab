@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ea522d0dfb2fd48b44c6aae3c4bba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 0}
+  _target: {fileID: 2263737327058748519, guid: a65977f170a584245b976f0050828f08, type: 3}
   _firePoint: {fileID: 4311877207496631729}
   _rayPosition: {fileID: 4311877207899557206}
   bullet: {fileID: 9190191608681471040, guid: c5a114bb83ecd804d99152acd7fa2d49, type: 3}
