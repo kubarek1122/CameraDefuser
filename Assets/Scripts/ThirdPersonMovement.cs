@@ -8,7 +8,8 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] private VisualEffect _explosion;
     [SerializeField] private float _respawnTime = 2f;
     [SerializeField] private float _jumpHeight = 5f;
-    [SerializeField] private Transform spawnPoint;
+    
+    private Transform spawnPoint;
 
     Transform cam;
 
@@ -28,6 +29,8 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         cam = GameObject.Find("Main Camera").transform;
         _rb = GetComponent<Rigidbody>();
+
+        spawnPoint = transform;
     }
 
     void Update()
@@ -54,7 +57,7 @@ public class ThirdPersonMovement : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             _rb.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
             isGrounded = false;

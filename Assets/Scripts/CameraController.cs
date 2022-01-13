@@ -28,4 +28,16 @@ public class CameraController : MonoBehaviour
             }
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            if (!player.isDead)
+            {
+                anim.Play();
+                player.Kill();
+            }
+        }
+    }
 }

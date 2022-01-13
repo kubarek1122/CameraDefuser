@@ -16,7 +16,7 @@ public class Finish : MonoBehaviour
             _fireworks.Play();
             foreach (var item in _walls)
             {
-                item.active = false;
+                item.SetActive(false);
             }
         }
     }
