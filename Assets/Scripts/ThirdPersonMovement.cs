@@ -6,29 +6,32 @@ using UnityEngine.VFX;
 public class ThirdPersonMovement : MonoBehaviour
 {
     [SerializeField] private VisualEffect _explosion;
-    [SerializeField] private float _respawnTime = 2f;
-    [SerializeField] private float _jumpHeight = 5f;
+    [SerializeField] private float respawnTime = 2f;
+    [SerializeField] private float jumpHeight = 5f;
     
     private Transform spawnPoint;
 
     Transform cam;
 
-    public float movementSpeed = 6f;
+    public float baseMovementSpeed = 6f;
+    public float sprintSpeed = 10f;
     public float turnSmooth = 0.1f;
-    public float gravity = 9.81f;
     float turnSmoothVelocity;
 
     public bool isDead = false;
     private bool isGrounded;
+    private float movementSpeed;
 
-    private Rigidbody _rb;
-
-    Vector3 jump = Vector3.zero;
+    Rigidbody rb;
+    Vector3 direction;
 
     private void Start()
     {
         cam = GameObject.Find("Main Camera").transform;
-        _rb = GetComponent<Rigidbody>();
+
+        rb = GetComponent<Rigidbody>();
+
+        movementSpeed = baseMovementSpeed;
 
         spawnPoint = transform;
     }
@@ -40,11 +43,17 @@ public class ThirdPersonMovement : MonoBehaviour
             return;
         }
 
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        processInputs();
+        
+    }
 
-        Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
+    private void FixedUpdate()
+    {
+        move(direction);
+    }
 
+    void move(Vector3 direction)
+    {
         if (direction.magnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
@@ -53,14 +62,29 @@ public class ThirdPersonMovement : MonoBehaviour
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            transform.position += moveDir.normalized * movementSpeed * Time.deltaTime;
+            rb.MovePosition(transform.position + moveDir.normalized * movementSpeed * Time.deltaTime);
         }
+    }
 
+    void processInputs()
+    {
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        direction = new Vector3(horizontal, 0, vertical).normalized;
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            _rb.AddForce(Vector3.up * _jumpHeight, ForceMode.Impulse);
-            isGrounded = false;
+            rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            movementSpeed = sprintSpeed;
+        }
+        else
+        {
+            movementSpeed = baseMovementSpeed;
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -73,13 +97,15 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         isDead = true;
 
-        Invoke("Respawn", _respawnTime);
+        Invoke("Respawn", respawnTime);
     }
 
     private void Respawn()
     {
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
+
+        rb.velocity = Vector3.zero;
 
         isDead = false;
     }
