@@ -1,0 +1,4 @@
+Blokowanie przez ściany
+Widoczność odległości
+sprint, złe kolizje, skoki,
+Mechaniki: rozdzielenie, szeroki kąt
