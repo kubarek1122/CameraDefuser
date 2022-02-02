@@ -8,8 +8,11 @@ public class VioletOrb : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        gameObject.SetActive(false);
-        Invoke("turnOn", 1.5f);
+        if (other.tag == "Player" || other.tag == "MainCamera")
+        {
+            gameObject.SetActive(false);
+            Invoke("turnOn", 1.5f);
+        }
     }
 
     void turnOn()
