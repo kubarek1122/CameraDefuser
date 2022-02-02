@@ -76,6 +76,7 @@ public class ThirdPersonMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+            isGrounded = false;
         }
 
         if (Input.GetKey(KeyCode.LeftShift))

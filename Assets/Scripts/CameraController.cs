@@ -65,18 +65,6 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Wall")
-        {
-            if (!player.isDead)
-            {
-                anim.Play();
-                player.Kill();
-            }
-        }
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Wall")

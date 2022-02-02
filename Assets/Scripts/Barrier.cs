@@ -8,10 +8,9 @@ public class Barrier : MonoBehaviour
     
     [SerializeField] private Material _material;
 
-    private Vector4 _color;
     void Start()
     {
-        _color = _material.GetVector("Color_d9dfc07cd944497c94d6401352b43c55");
+        _material.SetVector("Color_d9dfc07cd944497c94d6401352b43c55", new Vector4(3.5f, 3.5f, 0, 0));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,7 +29,7 @@ public class Barrier : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        _material.SetVector("Color_d9dfc07cd944497c94d6401352b43c55", _color);
+        _material.SetVector("Color_d9dfc07cd944497c94d6401352b43c55", new Vector4(3.5f, 3.5f, 0, 0));
         _door.enabled = true;
     }
 }
