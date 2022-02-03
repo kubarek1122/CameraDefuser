@@ -19210,10 +19210,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 564fe21bbd096694ead455945b8b7f31, type: 3}
-    m_FontSize: 200
+    m_FontSize: 180
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 2
+    m_MinSize: 1
     m_MaxSize: 255
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -19221,7 +19221,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: TITLE
+  m_Text: CAMERA DEFUSER
 --- !u!222 &1506228588
 CanvasRenderer:
   m_ObjectHideFlags: 0
