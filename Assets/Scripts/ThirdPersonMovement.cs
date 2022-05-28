@@ -22,6 +22,8 @@ public class ThirdPersonMovement : MonoBehaviour
     private bool isGrounded;
     private float movementSpeed;
 
+    RaycastHit slopeHit;
+
     Rigidbody rb;
     Vector3 direction;
 
@@ -43,8 +45,16 @@ public class ThirdPersonMovement : MonoBehaviour
             return;
         }
 
-        processInputs();
-        
+        ProcessInputs();
+        OnGround();
+        if (OnSlope())
+        {
+            rb.useGravity = false;
+        }
+        else
+        {
+            rb.useGravity = true;
+        }
     }
 
     private void FixedUpdate()
@@ -54,10 +64,37 @@ public class ThirdPersonMovement : MonoBehaviour
             return;
         }
 
-        move(direction);
+        Move(direction);
     }
 
-    void move(Vector3 direction)
+    bool OnGround()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, 1.2f))
+        {
+            isGrounded = true;
+            rb.drag = 1.0f;
+        }
+        else
+        {
+            isGrounded = false;
+            rb.drag = 0.1f;
+        }
+        return isGrounded;
+    }
+
+    bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, 1.1f))
+        {
+            if (slopeHit.normal != Vector3.down)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Move(Vector3 direction)
     {
         if (direction.magnitude >= 0.1f)
         {
@@ -67,11 +104,16 @@ public class ThirdPersonMovement : MonoBehaviour
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
+            if (OnSlope())
+            {
+                moveDir = Vector3.ProjectOnPlane(moveDir, slopeHit.normal);
+            }
+
             rb.MovePosition(transform.position + moveDir.normalized * movementSpeed * Time.deltaTime);
         }
     }
 
-    void processInputs()
+    void ProcessInputs()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
@@ -118,11 +160,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
-        {
-            isGrounded = true;
-        }
-
         if (collision.gameObject.tag == "Projectile")
         {
             if (!isDead)
@@ -140,5 +177,11 @@ public class ThirdPersonMovement : MonoBehaviour
             spawnPoint = other.transform.GetChild(0).transform;
             other.GetComponent<Checkpoint>().changeMaterial();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(slopeHit.point, 0.1f);
     }
 }
